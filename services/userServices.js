@@ -1,5 +1,4 @@
 const User = require('../models/userModel')
-const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
 const findUser = async function(userEmail){
@@ -41,7 +40,7 @@ const login = async (req, res, next)=>{
     if(curr_user !== null){
         let hashed_pass = bcrypt.compare(userPassword, curr_user.password)
         if(hashed_pass)
-            res.status(202).send(JSON.stringify({"message":"Login successful"}))
+            res.status(200).send(JSON.stringify({"message":"Login successful"}))
         else
             res.status(401).send(JSON.stringify({"message":"Login unsuccessfull incorrect password try again!"}))
     }else
