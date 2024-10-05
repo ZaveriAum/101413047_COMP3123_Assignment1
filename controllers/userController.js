@@ -1,7 +1,7 @@
 const service = require('../services/userServices')
 
 const signup = (req, res, next)=>{
-    service.create(req, res, next)
+    service.signup(req, res, next)
 }
 
 const login = (req, res, next)=>{
