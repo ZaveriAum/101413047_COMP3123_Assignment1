@@ -1,24 +1,23 @@
 const User = require('../models/userModel')
 const mongoose = require('mongoose')
 
-const findUser = async function(userName, userPassword){
+const findUser = async function(userEmail){
     try{
         // .exec() method makes the return a promise. 
-        return await User.findOne({username:userName, password:userPassword});
+        return await User.findOne({email:userEmail});
     }catch(e){
         console.log("Error: " + e)
     }
 }
 
-const create = async (req, res, next)=>{
+const signup = async (req, res, next)=>{
     let userName = req.body.username
     let userEmail =  req.body.email
     let userPassword =  req.body.password
 
-    let curr_user = await findUser(userName, userPassword)
+    let curr_user = await findUser(userEmail)
 
     if(curr_user === null){
-
 
         let new_user = new User({username:userName, email:userEmail, password:userPassword})
 
@@ -27,7 +26,24 @@ const create = async (req, res, next)=>{
         }).catch((err)=>{
             res.send(`Error: ${err}`)
         })
+    }else{
+        res.send(JSON.stringify({"status":false, "message":"Entered email already exists."}))
     }
 }
 
-module.exports.create = create
+const login = async (req, res, next)=>{
+    let userEmail = req.body.email
+    let userPassword = req.body.password
+
+    let curr_user = await findUser(userEmail)
+    if(curr_user !== null && userPassword === curr_user.password)
+        res.status(202).send(JSON.stringify({"message":"Login successful"}))
+    else if(curr_user !== null && userPassword !== curr_user.password)
+        res.status(401).send(JSON.stringify({"message":"Login unsuccessfull incorrect password try again!"}))
+    else
+        res.status(401).send(JSON.stringify({"message":"Login unsuccessfull incorrect email try again!"}))
+    
+}
+
+module.exports.signup = signup
+module.exports.login = login

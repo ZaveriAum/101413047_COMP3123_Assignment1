@@ -1,7 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const app = express()
-let router = require('./routes/userRoutes')
+let userRoutes = require('./routes/userRoutes')
 const SERVER_PORT = process.env.SERVER_PORT || 3000
 
 
@@ -10,7 +10,7 @@ app.get('/', (req, res)=>{
 })
 
 // end point /api/v1/user
-app.use('/api/v1/user', router)
+app.use('/api/v1/user', userRoutes)
 
 
 // Connecting to the mongo db 
