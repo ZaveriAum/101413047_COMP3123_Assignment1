@@ -3,6 +3,9 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const controller = require('../controllers/userController');
 
+router.use(express.json())
+router.use(express.urlencoded({extended:true}))
+
 const handleValidationErrors = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -36,5 +39,7 @@ router.post('/login',
     handleValidationErrors,
     controller.login
 );
+
+router.get('/info',controller.authenticateToken, controller.user_info)
 
 module.exports = router;
