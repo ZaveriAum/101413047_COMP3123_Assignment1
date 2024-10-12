@@ -52,17 +52,18 @@ const login = async (req, res, next) => {
         let userPassword = req.body.password
 
         let curr_user = await findUser(userEmail)
+
         if (curr_user !== null) {
             let payload = {
                 email: userEmail,
-                password: userPassword
             }
             const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET)// after logging jwt is send through a json store is somewhere and use it when you need authentication gain
-            let hashed_pass = bcrypt.compare(userPassword, curr_user.password)// comparing the hashed pass and pass entered by user. returns true if the pass matches and false if it doen't.
-            if (hashed_pass)
-                res.status(200).send(JSON.stringify({ "message": "Login successful", "accessToken": accessToken }))
-            else
-                res.status(401).send(JSON.stringify({ "message": "Login unsuccessfull incorrect password try again!" }))
+            await bcrypt.compare(userPassword, curr_user.password, (err, result) => {// comparing the hashed pass and pass entered by user. returns true if the pass matches and false if it doen't.
+                if (result)
+                    res.status(200).send(JSON.stringify({ "message": "Login successful", "accessToken": accessToken }))
+                else
+                    res.status(400).json({ "message": "Incorrect Password" })
+            })
         } else
             res.status(401).send(JSON.stringify({ "message": "Login unsuccessfull incorrect email try again!" }))
     } catch (err) {
