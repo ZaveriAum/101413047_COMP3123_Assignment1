@@ -3,8 +3,10 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const controller = require('../controllers/userController');
 
+// defining the middleware
 router.use(express.json())
-router.use(express.urlencoded({extended:true}))
+router.use(express.urlencoded({ extended: true }))
+
 
 const handleValidationErrors = (req, res, next) => {
     const errors = validationResult(req);
@@ -14,7 +16,8 @@ const handleValidationErrors = (req, res, next) => {
     next();
 };
 
-router.post('/signup', 
+// route to invoke sign up from the controller
+router.post('/signup',
     [
         body('username')
             .exists().withMessage('Username is required')
@@ -29,6 +32,7 @@ router.post('/signup',
     controller.signup
 );
 
+// route to login
 router.post('/login',
     [
         body('email')
@@ -40,6 +44,8 @@ router.post('/login',
     controller.login
 );
 
-router.get('/info',controller.authenticateToken, controller.user_info)
+// route to show jwt working
+router.get('/info', controller.authenticateToken, controller.user_info)
 
+// exporting router to index.js
 module.exports = router;
