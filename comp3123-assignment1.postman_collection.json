@@ -70,7 +70,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "https://101413047-comp-3123-assignment1.vercel.app/api/v1/emp/employees"
+						"url": "http://localhost:3000/api/v1/emp/employees"
 					},
 					"response": []
 				},
@@ -81,14 +81,14 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \r\n    \"first_name\": \"John\", \r\n    \"last_name\": \"Doe\", \r\n    \"email\": \"johndoe@example.com\", \r\n    \"position\": \"QA\",\r\n    \"salary\": 5000, \r\n    \"date_of_joining\": \"2024-08-10T00:00:00.000Z\", \r\n    \"department\": \"DEV\" \r\n} ",
+							"raw": "{ \r\n    \"first_name\": \"Aum\", \r\n    \"last_name\": \"Zaveri\", \r\n    \"email\": \"aumzaveri@example.com\", \r\n    \"position\": \"Senior Software Developer\",\r\n    \"salary\": 100000, \r\n    \"date_of_joining\": \"2024-08-10T00:00:00.000Z\", \r\n    \"department\": \"Development\" \r\n} ",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "https://101413047-comp-3123-assignment1.vercel.app/api/v1/emp/employees"
+						"url": "http://localhost:3000/api/v1/emp/employees"
 					},
 					"response": []
 				},
@@ -97,7 +97,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "https://101413047-comp-3123-assignment1.vercel.app/api/v1/emp/employees/670a9bbb3e0ccecd262ed948"
+						"url": "http://localhost:3000/api/v1/emp/employees/6733ae516d90f3931f95014b"
 					},
 					"response": []
 				},
@@ -144,6 +144,15 @@
 							}
 						},
 						"url": "http://localhost:3000/api/v1/emp/employees/670a9b24a7a9a487b7ca4e5f"
+					},
+					"response": []
+				},
+				{
+					"name": "search employee",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3000/api/v1/emp/search/dev"
 					},
 					"response": []
 				}
