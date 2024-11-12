@@ -1,5 +1,8 @@
 const Employee = require('../models/employeeModel')
 const mongoose = require('mongoose')
+require('dotenv').config()
+
+const DIGEST_AUTH = `${process.env.ATLAS_API_PUBLIC_KEY}:${process.env.ATLAS_API_PRIVATE_KEY}`
 
 // finding employee with their email
 const findEmployeeE = async (empEmail) => {
@@ -43,7 +46,6 @@ const createEmployee = async (req, res, next) => {
 // get specific employee
 const getEmployee = async (req, res, next) => {
     try {
-        let empId = req.params.id
         let emp = await Employee.findById(req.params.id)
 
         // if the list is not null then return all the employees
@@ -99,11 +101,27 @@ const deleteEmployee = async (req, res, next) => {
 
 }
 
+const searchEmployee = async (req, res, next) => {
+    try {
+        let search_query = req.params.search_query
+        const results = await Employee.find({
+            $or: [
+                { position: { $regex: search_query, $options: 'i' } },
+                { department: { $regex: search_query, $options: 'i' } },
+            ],
+        });
+        res.send(JSON.stringify(results));
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
 // export functions to employee controller
 module.exports = {
     getEmployees,
     createEmployee,
     getEmployee,
     updateEmployee,
-    deleteEmployee
+    deleteEmployee,
+    searchEmployee
 };

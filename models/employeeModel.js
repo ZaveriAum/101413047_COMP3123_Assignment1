@@ -13,5 +13,7 @@ const employeeSchema = new mongoose.Schema({
     "updated_at": { type: Date, default: Date.now }
 })
 
+employeeSchema.index({ first_name: 'text', department: 'text' })
+
 // exporting the employee model
 module.exports = mongoose.model('Employee', employeeSchema)

@@ -70,5 +70,7 @@ router.delete('/employees',
     controller.deleteEmployee
 );
 
+router.get('/search/:search_query', handleValidationErrors, controller.searchEmployee);
+
 // exporting router to the index.js
 module.exports = router;

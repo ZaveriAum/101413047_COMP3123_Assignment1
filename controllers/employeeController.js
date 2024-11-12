@@ -25,11 +25,16 @@ const deleteEmployee = (req, res, next) => {
     service.deleteEmployee(req, res, next)
 }
 
+const searchEmployee = (req, res, next) => {
+    service.searchEmployee(req, res, next)
+}
+
 // exporting all the functions.
 module.exports = {
     getEmployees,
     createEmployee,
     getEmployee,
     updateEmployee,
-    deleteEmployee
+    deleteEmployee,
+    searchEmployee
 };
