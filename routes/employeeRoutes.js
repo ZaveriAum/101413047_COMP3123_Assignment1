@@ -3,10 +3,12 @@ const { body, param, query, validationResult } = require('express-validator');
 const router = express.Router();
 const controller = require('../controllers/employeeController');
 const cookieAuthJwt = require('../middleware/cookieAuthJwt')
+const cookieParser = require("cookie-parser");
 
 // defining the middleware
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
+router.use(cookieParser())
 
 // getting the errors from req.
 const handleValidationErrors = (req, res, next) => {
@@ -23,12 +25,13 @@ const checkValidObjectId = (field) => param(field).isMongoId().withMessage('Inva
 // route to get a specific employee where employee id is taken from route params
 router.get('/employees/:id',
     checkValidObjectId('id'),
+    cookieAuthJwt.authenticateToken,
     handleValidationErrors,
     controller.getEmployee
 );
 
 // route to get all the employees in the dbs
-router.get('/employees', controller.getEmployees);
+router.get('/employees', cookieAuthJwt.authenticateToken, controller.getEmployees);
 
 // route to create an employee from the given information form req
 router.post('/employees',
@@ -41,6 +44,7 @@ router.post('/employees',
         body('date_of_joining').isISO8601().withMessage('Date of joining must be a valid date'),
         body('department').isLength({ min: 2 }).withMessage('Department is required')
     ],
+    cookieAuthJwt.authenticateToken,
     handleValidationErrors,
     controller.createEmployee
 );
@@ -58,6 +62,7 @@ router.put('/employees/:eid',
             .isNumeric().withMessage('Salary must be a number.')
             .custom((value) => value > 0).withMessage('Salary must be greater than 0.')
     ],
+    cookieAuthJwt.authenticateToken,
     handleValidationErrors,
     controller.updateEmployee
 );
@@ -67,11 +72,12 @@ router.delete('/employees',
     [
         query('eid').isMongoId().withMessage('Invalid employee ID format')
     ],
+    cookieAuthJwt.authenticateToken,
     handleValidationErrors,
     controller.deleteEmployee
 );
 
-router.get('/search/:search_query', handleValidationErrors, controller.searchEmployee);
+router.get('/search/:search_query', cookieAuthJwt.authenticateToken, handleValidationErrors, controller.searchEmployee);
 
 // exporting router to the index.js
 module.exports = router;

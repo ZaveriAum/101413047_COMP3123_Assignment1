@@ -57,12 +57,10 @@ const login = async (req, res, next) => {
             let payload = {
                 email: userEmail,
             }
-            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, (err, asyncToken) => {
-                if (err) throw err;
-            });
+            const accessToken = await getToken(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" })
             await bcrypt.compare(userPassword, curr_user.password, (err, result) => {// comparing the hashed pass and pass entered by user. returns true if the pass matches and false if it doen't.
                 if (result) {
-                    res.cookie("token", accessToken);
+                    res.cookie("token", accessToken)
                     res.status(200).send(JSON.stringify({ "message": "Login successful" }))
                 }
                 else
@@ -93,6 +91,18 @@ const logout = async (req, res, next) => {
     } catch (err) {
         res.send(err)
     }
+}
+
+async function getToken(payload, secret, options) {
+    return new Promise((resolve, reject) => {
+        jwt.sign(payload, secret, options, (err, token) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(token);
+            }
+        });
+    });
 }
 
 // exporting functions to user controller
