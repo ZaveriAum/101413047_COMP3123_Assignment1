@@ -15,9 +15,14 @@ const user_info = (req, res, next) => {
     service.user_info(req, res, next)
 }
 
+const logout = (req, res, next) => {
+    service.logout(req, res, next)
+}
+
 // exporting all the function to the routes
 module.exports = {
     signup,
     login,
     user_info,
+    logout
 };

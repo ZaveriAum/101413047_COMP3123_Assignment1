@@ -86,9 +86,19 @@ const user_info = async (req, res, next) => {
     }
 }
 
+const logout = async (req, res, next) => {
+    try {
+        res.cookie('token', '', { expires: new Date(0) });
+        res.status(200).json({ "message": "Logged out successfully." })
+    } catch (err) {
+        res.send(err)
+    }
+}
+
 // exporting functions to user controller
 module.exports = {
     signup,
     login,
-    user_info
+    user_info,
+    logout
 };

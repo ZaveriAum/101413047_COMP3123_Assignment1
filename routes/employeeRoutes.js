@@ -2,6 +2,7 @@ const express = require('express');
 const { body, param, query, validationResult } = require('express-validator');
 const router = express.Router();
 const controller = require('../controllers/employeeController');
+const cookieAuthJwt = require('../middleware/cookieAuthJwt')
 
 // defining the middleware
 router.use(express.json())
