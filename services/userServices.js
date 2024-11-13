@@ -57,7 +57,9 @@ const login = async (req, res, next) => {
             let payload = {
                 email: userEmail,
             }
-            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expriresIn: "1h" })// after logging jwt is send through a json store is somewhere and use it when you need authentication gain
+            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, (err, asyncToken) => {
+                if (err) throw err;
+            });
             await bcrypt.compare(userPassword, curr_user.password, (err, result) => {// comparing the hashed pass and pass entered by user. returns true if the pass matches and false if it doen't.
                 if (result) {
                     res.cookie("token", accessToken);
