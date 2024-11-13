@@ -3,8 +3,14 @@ const mongoose = require('mongoose')
 const app = express()
 let userRoutes = require('./routes/userRoutes')// getting the user routes
 let employeeRoutes = require('./routes/employeeRoutes')// getting the employee routes
-const SERVER_PORT = process.env.SERVER_PORT || 3000
+const SERVER_PORT = process.env.SERVER_PORT || 5000
+const cors = require('cors')
 require('dotenv').config()
+
+// front end and back end could communicate with this
+app.use(cors({
+    origin: 'http://localhost:3000'
+}));
 
 // home route
 app.get('/', (req, res) => {
@@ -14,6 +20,7 @@ app.get('/', (req, res) => {
 // end point /api/v1/user
 app.use('/api/v1/user', userRoutes)
 app.use('/api/v1/emp', employeeRoutes)
+
 
 // Connecting to the mongo db 
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING)
