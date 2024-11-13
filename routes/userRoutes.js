@@ -2,11 +2,13 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const controller = require('../controllers/userController');
+const cookieAuthJwt = require('../middleware/cookieAuthJwt')
+const cookieParser = require("cookie-parser");
 
 // defining the middleware
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
-
+router.use(cookieParser())
 
 const handleValidationErrors = (req, res, next) => {
     const errors = validationResult(req);
@@ -45,7 +47,7 @@ router.post('/login',
 );
 
 // route to show jwt working
-router.get('/info', controller.authenticateToken, controller.user_info)
+router.get('/info', cookieAuthJwt.authenticateToken, controller.user_info)
 
 // exporting router to index.js
 module.exports = router;

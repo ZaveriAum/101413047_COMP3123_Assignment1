@@ -57,10 +57,12 @@ const login = async (req, res, next) => {
             let payload = {
                 email: userEmail,
             }
-            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET)// after logging jwt is send through a json store is somewhere and use it when you need authentication gain
+            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expriresIn: "1h" })// after logging jwt is send through a json store is somewhere and use it when you need authentication gain
             await bcrypt.compare(userPassword, curr_user.password, (err, result) => {// comparing the hashed pass and pass entered by user. returns true if the pass matches and false if it doen't.
-                if (result)
-                    res.status(200).send(JSON.stringify({ "message": "Login successful", "accessToken": accessToken }))
+                if (result) {
+                    res.cookie("token", accessToken);
+                    res.status(200).send(JSON.stringify({ "message": "Login successful" }))
+                }
                 else
                     res.status(400).json({ "message": "Incorrect Password" })
             })
@@ -82,25 +84,9 @@ const user_info = async (req, res, next) => {
     }
 }
 
-// Authenticating the token taken from the header and verifying for user info converting token to the user.
-const authenticateToken = (req, res, next) => {
-    const authHeader = req.headers['authorization']
-    // if the header has the token then split it form the space and provide the second element
-    const token = authHeader && authHeader.split(' ')[1]
-    if (token == null) return res.status(401).send(JSON.stringify({ "error": "You do not have access." }))
-
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) return res.status(403).send(JSON.stringify({ "error": "Token provided is not a valid token" }))
-
-        req.user = user
-        next()
-    })
-}
-
 // exporting functions to user controller
 module.exports = {
     signup,
     login,
-    user_info,
-    authenticateToken
+    user_info
 };
