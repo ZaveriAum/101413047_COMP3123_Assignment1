@@ -14,7 +14,7 @@ const findEmployeeE = async (empEmail) => {
 }
 
 // getting all the employees in the database
-const getEmployees = async (req, res, next) => {
+const getEmployees = async (req, rest) => {
     try {
         res.status(200).send(JSON.stringify(await Employee.find({})))
     } catch (e) {
@@ -23,7 +23,7 @@ const getEmployees = async (req, res, next) => {
 }
 
 // creating employee from the req body
-const createEmployee = async (req, res, next) => {
+const createEmployee = async (req, res) => {
     try {
         let { first_name, last_name, email, position, salary, date_of_joining, department } = req.body
         let emp = await findEmployeeE(email)
@@ -44,7 +44,7 @@ const createEmployee = async (req, res, next) => {
 }
 
 // get specific employee
-const getEmployee = async (req, res, next) => {
+const getEmployee = async (req, res) => {
     try {
         let emp = await Employee.findById(req.params.id)
 
@@ -63,7 +63,7 @@ const getEmployee = async (req, res, next) => {
     }
 }
 
-const updateEmployee = async (req, res, next) => {
+const updateEmployee = async (req, res) => {
     // try to find the employee from id if it exists then update it or else return err.
     try {
         let emp = await Employee.findById(req.params.eid)
@@ -82,7 +82,7 @@ const updateEmployee = async (req, res, next) => {
 }
 
 // delete employee from id
-const deleteEmployee = async (req, res, next) => {
+const deleteEmployee = async (req, res) => {
     // try to find the emp from id if exists then delete or else return no employee with the given id.
     try {
         if (!mongoose.Types.ObjectId.isValid(req.query.eid)) {

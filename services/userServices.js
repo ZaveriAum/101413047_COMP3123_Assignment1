@@ -6,103 +6,72 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
 // find the user from the given email
-const findUser = async function (userEmail) {
+const findUser = async function (email) {
     // try to return employee after finding using email
     try {
         // .exec() method makes the return a promise. 
-        return await User.findOne({ email: userEmail });
+        return await User.findOne({ email: email });
     } catch (e) {
-        console.log("Error: " + e)
+        throw new Error(e.message)
     }
 }
 
 // sign up 
-const signup = async (req, res, next) => {
+const signup = async (userData) => {
     // try finding employee from the given email from the body if the empoyee is null then go ahead and create the user or else entered already exists.
-    try {
-        let userName = req.body.username
-        let userEmail = req.body.email
-        let userPassword = req.body.password
+    const { username, email, password } = userData;
 
-        let curr_user = await findUser(userEmail)
+    const existing_user = await findUser(email)
 
-        if (curr_user === null) {
-
-            let hashed_pass = await bcrypt.hash(userPassword, 12)
-            let new_user = new User({ username: userName, email: userEmail, password: hashed_pass })
-
-            await new_user.save().then((data) => {
-                res.status(201).send(JSON.stringify({ "message": "User created successfully", "user_id": `${data.id}` }))
-            }).catch((err) => {
-                res.send(`Error: ${err}`)
-            })
-        } else {
-            res.send(JSON.stringify({ "status": false, "message": "Entered email already exists." }))
-        }
-    } catch (err) {
-        res.send(err)
+    if (existing_user) {
+        throw new Error("User already exists with the given email.");
     }
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const newUser = new User({ username, email, password: hashedPassword });
+
+    return await newUser.save();
+
 }
 
 // login to the user
-const login = async (req, res, next) => {
-    // from the given email try to find user if exists then check password matches then login
-    try {
-        let userEmail = req.body.email
-        let userPassword = req.body.password
+const login = async (userData) => {
+    const { email, password } = userData;
 
-        let curr_user = await findUser(userEmail)
-
-        if (curr_user !== null) {
-            let payload = {
-                email: userEmail,
-            }
-            const accessToken = await getToken(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" })
-            await bcrypt.compare(userPassword, curr_user.password, (err, result) => {// comparing the hashed pass and pass entered by user. returns true if the pass matches and false if it doen't.
-                if (result) {
-                    res.cookie("token", accessToken)
-                    res.status(200).send(JSON.stringify({ "message": "Login successful" }))
-                }
-                else
-                    res.status(400).json({ "message": "Incorrect Password" })
-            })
-        } else
-            res.status(401).send(JSON.stringify({ "message": "Login unsuccessfull incorrect email try again!" }))
-    } catch (err) {
-        res.send(err)
+    const existing_user = await findUser(email);
+    if (!existing_user) {
+        throw new Error("Invalid email or password");
     }
-}
+
+    const isPasswordCorrect = await bcrypt.compare(password, existing_user.password);
+    if (!isPasswordCorrect) {
+        throw new Error("Invalid email or password");
+    }
+
+    const payload = { email: email };
+    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "1h",
+    });
+
+    return { user: existing_user, token: accessToken };
+};
+
 
 // Showcasing that jwt are working perfectly
-const user_info = async (req, res, next) => {
-    // trying to get the user info where as a middleware is authenicate Token to get the user info of user from the jwt
+const user_info = async (email) => {
     try {
-        let user = await findUser(req.user.email)
-        res.send(JSON.stringify(user))
-    } catch (err) {
-        res.send(err)
+        const user = await findUser(email);
+        if (!user) {
+            throw new Error("User not found");
+        }
+        return user;
+    } catch (e) {
+        throw new Error(e.message);
     }
-}
+};
 
-const logout = async (req, res, next) => {
-    try {
-        res.cookie('token', '', { expires: new Date(0) });
-        res.status(200).json({ "message": "Logged out successfully." })
-    } catch (err) {
-        res.send(err)
-    }
-}
 
-async function getToken(payload, secret, options) {
-    return new Promise((resolve, reject) => {
-        jwt.sign(payload, secret, options, (err, token) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(token);
-            }
-        });
-    });
+const logout = () => {
+    return {token:"", options : {expires: new Date(0)}};
 }
 
 // exporting functions to user controller

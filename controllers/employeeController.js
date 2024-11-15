@@ -1,32 +1,32 @@
 const service = require('../services/employeeServices')
 
 // getting all employees from the database
-const getEmployees = (req, res, next) => {
-    service.getEmployees(req, res, next)
+const getEmployees = (req, res) => {
+    service.getEmployees(req, res)
 }
 
 // create an employee into the database
-const createEmployee = (req, res, next) => {
-    service.createEmployee(req, res, next)
+const createEmployee = (req, resolve) => {
+    service.createEmployee(req, res)
 }
 
 // get a employee with the given eid from the employee id
-const getEmployee = (req, res, next) => {
-    service.getEmployee(req, res, next)
+const getEmployee = (req, res) => {
+    service.getEmployee(req, res)
 }
 
 // update employee information
-const updateEmployee = (req, res, next) => {
-    service.updateEmployee(req, res, next)
+const updateEmployee = (req, res) => {
+    service.updateEmployee(req, res)
 }
 
 // delete employee from the given id
-const deleteEmployee = (req, res, next) => {
-    service.deleteEmployee(req, res, next)
+const deleteEmployee = (req, res) => {
+    service.deleteEmployee(req, res)
 }
 
-const searchEmployee = (req, res, next) => {
-    service.searchEmployee(req, res, next)
+const searchEmployee = (req, res) => {
+    service.searchEmployee(req, rest)
 }
 
 // exporting all the functions.
