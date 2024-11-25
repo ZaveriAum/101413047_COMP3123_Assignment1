@@ -23,7 +23,7 @@ const createEmployee = async (employeeData) => {
     let { first_name, last_name, email, position, salary, date_of_joining, department } = employeeData
     let existing_emp = await findEmployeeE(email)
     // if the emp found is null then create new employee
-    if (!existing_emp) {
+    if (existing_emp) {
         throw new Error("Employee with the email already exists.")
     } 
     let new_emp = Employee({ first_name: first_name, last_name: last_name, email: email, position: position, salary: salary, date_of_joining: date_of_joining, department: department })

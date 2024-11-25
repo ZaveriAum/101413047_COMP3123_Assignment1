@@ -10,8 +10,7 @@ const authenticateToken = (req, res, next) => {
         next();
     }
     catch (err) {
-        res.clearCookie("token")
-        return res.redirect("/")
+        throw new Error("User is not authorized")
     }
 }
 

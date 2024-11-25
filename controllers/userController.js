@@ -1,60 +1,53 @@
 const service = require('../services/userServices')
 
-// creating user from the given data in the body
 const signup = async (req, res) => {
     try{
         const user = await service.signup(req.body);
         res.status(201).json({
-            status: "successful",
-            message: "User signed successful",
+            status: true,
             user: user,
         });
     }catch(e){
         res.status(400).json({
-            status: "unsuccessful",
-            title: e.title,
-            message: e.message
+            status: false,
+            message: e.message || "Signup failed. Please try again."
         });
     }
 }
 
-// logining into the server from the given data in the body
 const login = async (req, res) => {
     try {
         const { user, token } = await service.login(req.body);
 
         res.cookie("token", token, {
             httpOnly: true,
+            sameSite: 'lax',
             maxAge: 3600000, 
         });
 
         res.status(200).json({
-            status: "success",
-            message: "Logged in successfully",
+            status: true,
             user: user,
         });
     } catch (e) {
         res.status(400).json({
-            status: "unsuccessful",
-            title: e.title || "Login Failed",
+            status: false,
             message: e.message,
         });
     }
 };
 
 
-// for jwt validations user_info function
 const user_info = async (req, res) => {
     try{
         const user = await service.user_info(req.user.email);
         res.status(200).json({
-            status: "success",
+            status: true,
             user: user
         });
     }catch(e){
         res.status(400).json({
-            status: "unsuccessful",
-            title : e.title,
+            status: false,
             message : e.message,
         });
     }
@@ -66,19 +59,17 @@ const logout = (req, res) => {
         res.cookie("token", token, option);
 
         res.status(200).json({
-            status: "success",
+            status: true,
             message: "Logged out successfully"
         });
     }catch(e){
         res.status(500).json({
-            status: "unsuccessful",
-            title: e.title,
+            status: false,
             message: e.message
         });
     }
 }
 
-// exporting all the function to the routes
 module.exports = {
     signup,
     login,
