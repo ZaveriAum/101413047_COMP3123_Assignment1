@@ -9,7 +9,7 @@ require('dotenv').config()
 
 // front end and back end could communicate with this
 app.use(cors({
-    origin: 'http://localhost:3000', // fronend
+    origin: ['http://localhost:3000', 'https://101413047-comp3123-assignment2-reactjs.vercel.app/'], // fronend
     credentials: true, // so that when cookies are asked for authentication it works
 }));
 
