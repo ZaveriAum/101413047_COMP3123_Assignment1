@@ -22,6 +22,7 @@ const login = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
             maxAge: 3600000, 
         });
 
@@ -54,21 +55,22 @@ const user_info = async (req, res) => {
 }
 
 const logout = (req, res) => {
-    try{
-        const {token, option} = service.logout();
-        res.cookie("token", token, option);
+    try {
+        const { token, options } = service.logout();
+        res.cookie("token", token, options);
 
         res.status(200).json({
             status: true,
-            message: "Logged out successfully"
+            message: "Logged out successfully",
         });
-    }catch(e){
+    } catch (e) {
         res.status(500).json({
             status: false,
-            message: e.message
+            message: e.message || "Logout failed",
         });
     }
 }
+
 
 module.exports = {
     signup,

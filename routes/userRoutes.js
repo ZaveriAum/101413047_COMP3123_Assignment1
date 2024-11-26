@@ -6,9 +6,9 @@ const cookieAuthJwt = require('../middleware/cookieAuthJwt')
 const cookieParser = require("cookie-parser");
 
 // defining the middleware
+router.use(cookieParser())
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
-router.use(cookieParser())
 
 const handleValidationErrors = (req, res, next) => {
     const errors = validationResult(req);
