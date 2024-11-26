@@ -23,7 +23,7 @@ const login = async (req, res) => {
             httpOnly: true,
             sameSite: 'lax',
             secure: true,
-            maxAge: 3600000, 
+            maxAge: 36000, 
         });
 
         res.status(200).json({
