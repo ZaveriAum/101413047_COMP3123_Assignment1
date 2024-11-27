@@ -19,17 +19,12 @@ const login = async (req, res) => {
     try {
         const { user, token } = await service.login(req.body);
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            sameSite: 'lax',
-            secure: true,
-            maxAge: 36000, 
-        });
-
         res.status(200).json({
             status: true,
             user: user,
+            token: token,
         });
+        
     } catch (e) {
         res.status(400).json({
             status: false,
