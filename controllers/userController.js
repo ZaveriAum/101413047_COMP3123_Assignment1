@@ -49,27 +49,8 @@ const user_info = async (req, res) => {
     }
 }
 
-const logout = (req, res) => {
-    try {
-        const { token, options } = service.logout();
-        res.cookie("token", token, options);
-
-        res.status(200).json({
-            status: true,
-            message: "Logged out successfully",
-        });
-    } catch (e) {
-        res.status(500).json({
-            status: false,
-            message: e.message || "Logout failed",
-        });
-    }
-}
-
-
 module.exports = {
     signup,
     login,
-    user_info,
-    logout
+    user_info
 };

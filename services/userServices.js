@@ -69,23 +69,9 @@ const user_info = async (email) => {
     }
 };
 
-
-const logout = () => {
-    return {
-        token: "",
-        options: {
-            httpOnly: true,
-            sameSite: "lax",
-            maxAge: 1,
-        },
-    };
-};
-
-
 // exporting functions to user controller
 module.exports = {
     signup,
     login,
-    user_info,
-    logout
+    user_info
 };

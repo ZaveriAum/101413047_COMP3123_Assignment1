@@ -46,8 +46,6 @@ router.post('/login',
     controller.login
 );
 
-router.get('/logout', handleValidationErrors, controller.logout)
-
 // route to show jwt working
 router.get('/info', cookieAuthJwt.authenticateToken, controller.user_info)
 
