@@ -41,7 +41,6 @@ router.post('/employees',
         body('email').isEmail().withMessage('Valid email is required'),
         body('position').isLength({ min: 2 }).withMessage('Position is required'),
         body('salary').isNumeric().withMessage('Salary must be a number'),
-        body('date_of_joining').isISO8601().withMessage('Date of joining must be a valid date'),
         body('department').isLength({ min: 2 }).withMessage('Department is required')
     ],
     cookieAuthJwt.authenticateToken,
