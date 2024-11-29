@@ -53,14 +53,13 @@ router.post('/employees',
 router.put('/employees/:eid',
     [
         checkValidObjectId('eid'),
-        body('position')
-            .optional()
-            .isString().withMessage('Position must be a string.')
-            .notEmpty().withMessage('Position cannot be empty.'),
-        body('salary')
-            .optional()
-            .isNumeric().withMessage('Salary must be a number.')
-            .custom((value) => value > 0).withMessage('Salary must be greater than 0.')
+        body('first_name').isLength({ min: 2 }).withMessage('First name is required'),
+        body('last_name').isLength({ min: 2 }).withMessage('Last name is required'),
+        body('email').isEmail().withMessage('Valid email is required'),
+        body('position').isLength({ min: 2 }).withMessage('Position is required'),
+        body('salary').isNumeric().withMessage('Salary must be a number'),
+        body('date_of_joining').isISO8601().withMessage('Date of joining must be a valid date'),
+        body('department').isLength({ min: 2 }).withMessage('Department is required')
     ],
     cookieAuthJwt.authenticateToken,
     handleValidationErrors,
@@ -69,9 +68,6 @@ router.put('/employees/:eid',
 
 // route to delete the employee where we get the employee id query parameter
 router.delete('/employees',
-    [
-        query('eid').isMongoId().withMessage('Invalid employee ID format')
-    ],
     cookieAuthJwt.authenticateToken,
     handleValidationErrors,
     controller.deleteEmployee
