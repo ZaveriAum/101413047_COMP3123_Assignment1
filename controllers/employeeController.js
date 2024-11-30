@@ -4,7 +4,7 @@ const service = require('../services/employeeServices')
 const getEmployees = async (req, res) => {
     try{
         const employees = await service.getEmployees()
-        res.status(201).json({
+        res.status(200).json({
             status: true,
             employees: employees,
         });
@@ -36,7 +36,7 @@ const createEmployee = async (req, res) => {
 const getEmployee = async (req, res) => {
     try{
         const employee = await service.getEmployee(req.params.id)
-        res.status(201).json({
+        res.status(200).json({
             status: true,
             employee: employee,
         });
@@ -82,7 +82,7 @@ const deleteEmployee = async (req, res) => {
 const searchEmployee = async (req, res) => {
     try{
         const employees = await service.searchEmployee(req.params.search_query)
-        res.status(201).json({
+        res.status(200).json({
             status: true,
             employees: employees,
         });
